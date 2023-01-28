@@ -10,17 +10,23 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include"pipex.h"
-
+//before terminating any process or exiting due to an execution failure, 
+//the programmer is responsible closing every open file and freeing every allocated memory since nothing in the C standard guarantees
+//that the system will free or close.
+//So, before terminating any process, I should close open files and deallocate memory.
 static	void	ft_setting(char **av, char **env)
 {
 	t_pp	pp;
 	char	*path;
 	char	**path_s;
 
+	//split the commands
 	pp.cmd_a = ft_split(av[2], ' ');
 	pp.cmd_b = ft_split(av[3], ' ');
+	//finding the PATH
 	path = find_path(env);
 	path_s = NULL;
+	//if the path does not exist, the program displays the "command not found" message but keeps working to create the output file as shell.
 	if (path == NULL)
 	{
 		ft_printf("term: command not found: %s\n", pp.cmd_a[0]);
@@ -28,6 +34,7 @@ static	void	ft_setting(char **av, char **env)
 	}
 	else
 	{
+		//splitting the path
 		path_s = ft_split(path, ':');
 		if (path_s == NULL)
 		{
@@ -40,6 +47,7 @@ static	void	ft_setting(char **av, char **env)
 
 int	main(int ac, char **av, char **env)
 {
+	//The number of arguments should be 5
 	if (ac == 5)
 		ft_setting(av, env);
 	else
