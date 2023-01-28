@@ -59,7 +59,166 @@ $ echo $PATH
 ```
 This will show you all the directories where the shell looks for commands and programs. The directories in the PATH are separated by colons.
 
+- If you need tp add directory to the PATH run the command below:
+```
+$ PATH=$PATH:/path/to/directory
+```
+- If you need to add the current directory run:
+```
+$ PATH=$PATH:.
+```
+__3. Redirecting Input and Output__
+Sometimes, you want to save the output from a command instead of just having it displayed on the monitor. The bash shell provides a few different operators that allow you to redirect the output of a command to an alternative location (such as a file). Redirection can be used for input as well as output, redirecting a file to a command for input. This section describes what you need to do to use redirection in your shell scripts.
+
+*Output redirection*
+
+The most basic type of redirection is sending output from a command to a file. The bash
+shell uses the greater-than symbol (>) for this: command > outputfile    
+
+- to overwrite: >>
+
+*Input redirection*
+
+Input redirection is the opposite of output redirection. Instead of taking the output of a
+command and redirecting it to a file, input redirection takes the content of a file and
+redirects it to a command.
+The input redirection symbol is the less-than symbol (<):
+command < inputfile
+
+## PIPES
+
+Instead of redirecting the output of a command to a file, you can redirect the output to another command. This process is called piping.
+
+__1. Process management in OS__
+
+A process is a program in execution. A process will need certain resources—such as CPU time, 
+memory, files, and I/O devices— to accomplish its task. These resources are typically allocated 
+to the process while it is executing.
+
+To see running processes run the command bellow:
+```
+$ ps
+```
+>We emphasize that a program by itself is not a process. A program is a
+passive entity, such as a file containing a list of instructions stored on disk
+(often called an executable file ). In contrast, a process is an active entity,
+with a program counter specifying the next instruction to execute and a set
+of associated resources. A program becomes a process when an executable file
+is loaded into memory. 
+
+----> Process creation
+
+During the course of execution, a process may create several new processes. As mentioned earlier, the creating process is called a parent process, and the new processes are called the children of that process. Each of these new processes may in turn create other processes, forming a tree of processes.
+
+Most operating systems (including UNIX, Linux, and Windows) identify processes according to a unique process identifier (or pid), which is typically an integer number. The pid provides a unique value for each process in the system, and it can be used as an index to access various attributes of a process within the kernel.
+
+----> Child process
+
+In general, when a process creates a child process, that child process will need certain resources (CPU time, memory, files, I/O devices) to accomplish its task. A child process may be able to obtain its resources directly from the operating system, or it may be constrained to a subset of the resources of the parent process. The parent may have to partition its resources among its children, or it may be able to share some resources (such as memory or files) among several of its children. Restricting a child process to a subset of the parent’s resources prevents any process from overloading the system by creating too many child processes.
+
+— When a process creates a new process, two possibilities for execution exist:
+
+1. The parent continues to execute concurrently with its children.
+2. The parent waits until some or all of its children have terminated.
+
+— There are also two address-space possibilities for the new process:
+
+1. The child process is a duplicate of the parent process (it has the same program and data as the parent).
+2. The child process has a new program loaded into it.
 
 
+----- To illustrate these differences, let’s first consider the UNIX operating system. In UNIX, as we’ve seen, each process is identified by its process identifier, which is a unique integer. A new process is created by the fork() system call. The new process consists of a copy of the address space of the original process. This mechanism allows the parent process to communicate easily with its child process. Both processes (the parent and the child) continue execution at the instruction after the fork(), with one difference: the return code for the fork() is zero for the new (child) process, whereas the (nonzero) process identifier of the child is returned to the parent.
 
+----- After a fork() system call, one of the two processes typically uses the exec() system call to replace the process’s memory space with a new program. The exec() system call loads a binary file into memory (destroying the memory image of the program containing the exec() system call) and starts  its execution. In this manner, the two processes are able to communicate and then go their separate ways. The parent can then create more children; or, if it has nothing else to do while the child runs, it can issue a wait() system call to move itself off the ready queue until the termination of the child. Because the call to exec() overlays the process’s address space with a new program, exec() does not return control unless an error occurs.
 
+```
+#include <sys/types.h>
+#include <stdio.h>
+#include <unistd.h>
+int main()
+{
+  pid t pid;
+  /* fork a child process */
+  pid = fork();
+  if (pid < 0) { /* error occurred */
+    fprintf(stderr, "Fork Failed");
+    return 1;
+  }
+  else if (pid == 0) { /* child process */
+    execlp("/bin/ls","ls",NULL);
+  }
+  else { /* parent process */
+  /* parent will wait for the child to complete */
+    wait(NULL);
+    printf("Child Complete");
+  }
+  return 0;
+}
+```
+|
+|
+ -----> The C program shown in the top illustrates the UNIX system calls previously described. We now have two different processes running copies of the same program. The only difference is that the value of the variable pid for the child process is zero, while that for the parent is an integer value greater than zero (in fact, it is the actual pid of the child process). The child process inherits privileges and scheduling attributes from the parent, as well certain resources, such as open files. The child process then overlays its address space with the UNIX command /bin/ls (used to get a directory listing) using the execlp() system call (execlp() is a version of the exec() system call). The parent waits for the child process to complete with the wait() system call. When the child process completes (by either implicitly or explicitly invoking exit()), the parent process resumes from the call to wait(), where it completes using the exit() system call.
+ 
+ *Process creation illustrated using fork():
+ 
+ parent ----> pid = fork() ----> parent (pid > 0) ----------------------->wait() ---->parent resumes
+                            ----> child (pid = 0) --> exec() -------->exit() ^
+ 
+__2. Networking and Inter-Process Communication__
+
+Processes run individually and work independently in their respective address spaces. 
+However, they sometimes need to communicate with each other to pass on information. 
+For processes to cooperate, they need to be able to communicate with each other as 
+well as synchronize their actions.
+
+These communications can be unidirectional or bidirectional. To enable any form of
+communication between processes, the following popular interprocess communication 
+(IPC) mechanisms are used: pipes, FIFOs (named pipes), sockets, message queues, 
+and shared memory. Pipes and FIFO enable unidirectional communication, whereas 
+sockets, message queues, and shared memory enable bidirectional communication.
+
+__pipe() system call__
+
+A pipe is used for connecting two processes. The output from one process can be sent
+as an input to another process. The flow is unidirectional, that is, one process can
+write to the pipe and another process can read from the pipe. Writing and reading are
+done in an area of main memory, which is also known as a virtual file. Pipes have a
+First in First out (FIFO) or a queue structure, that is, what is written first will be read
+first.
+
+The index location, pp[0], will get the file descriptor for the reading end of the pipe 
+and pp[1] will get the file descriptor for the write end of the pipe.
+
+ps: A process should not try to read from the pipe before something is
+written into it, otherwise it will suspend until something is written
+into the pipe.
+
+Syntax: 
+```
+int pipe(int arr[2]);
+```
+The function returns 0 on success and -1 on error.
+
+__perror() function__
+
+This displays an error message indicating the error that might have occurred while
+invoking a function or system call. The error message is displayed to stderr, that is,
+the standard error output stream. This is basically the console.
+
+Syntax:
+```
+void perror ( const char * str );
+```
+
+__fork() system call__
+
+Both processes start their execution right after the system call fork()
+. Since both processes have identical but separate address spaces, those variables initialized before
+ the fork()
+ call have the same values in both address spaces. Since every process has its own address space, any modifications will be independent of the others. In other words, if the parent changes the value of its variable, the modification will only affect the variable in the parent process's address space. Other address spaces created by fork()
+ calls will not be affected even though they have identical variable names.
+ 
+ __execve() system call__
+ 
+ The exec system call family replaces the currently running process with a new process. But the original process identifier remains the same, and all the internal details, such as stack, data, and instructions. The new process replaces the executables. This function call family runs binary executables and shell scripts.
+ 
