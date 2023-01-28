@@ -78,12 +78,12 @@ void	ft_open(char **av, t_pp pp, char **path_s, char **env)
 	//open the input file for read only
 	pp.fd_in = open(av[1], O_RDONLY);
 	//even if the open function failed, I should create the output file.
-	//perror will specify the reason why it couldn't the file. (like: permission denied || no such file or directory).
+	//perror will specify the reason why open function couldn't opne the file. (like: permission denied || no such file or directory).
 	if (pp.fd_in < 0)
 		ft_norm1(pp, path_s, av, 0);
 	//create the output file for write & truncate.
 	pp.fd_out = open(av[4], O_CREAT | O_WRONLY | O_TRUNC, 0644);
-	//if the open file to create the file I should dallocate memory and close the input file.
+	//if the open function fails to create the file I should dallocate memory and close the input file.
 	if (pp.fd_out < 0)
 	{
 		ft_norm1(pp, path_s, av, 1);
