@@ -60,8 +60,11 @@ void	cmd_path(t_pp *pp, char *cmd, char **path_s)
 	char	*join;
 
 	join = NULL;
+	//if the cmd has a '/' means that we already have the program path.
+	//so, we directly check if this program exists and if we have the permissions to execute it.
 	if (ft_search(cmd, '/') || ft_search(cmd, '.'))
 	{
+		//F_OK flag tells if the file exists.
 		if (access(cmd, F_OK) == 0)
 		{
 			ft_access(pp, cmd, NULL, path_s);
@@ -72,8 +75,13 @@ void	cmd_path(t_pp *pp, char *cmd, char **path_s)
 	}
 	else
 	{
+		//else we look for the command path
 		ft_find(pp, &join, path_s, cmd);
 	}
 	if (join == NULL)
+	{
+		//if the loop terminates and the value of join is NULL that means that the program/command does not exist or 
+		//we don't have permission to execute it
 		ft_free(pp, path_s, cmd);
+	}
 }
