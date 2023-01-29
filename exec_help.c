@@ -62,7 +62,7 @@ void	cmd_path(t_pp *pp, char *cmd, char **path_s)
 	join = NULL;
 	//if the cmd has a '/' means that we already have the program path.
 	//so, we directly check if this program exists and if we have the permissions to execute it.
-	if (ft_search(cmd, '/') || ft_search(cmd, '.'))
+	if (ft_search(cmd, '/'))
 	{
 		//F_OK flag tells if the file exists.
 		if (access(cmd, F_OK) == 0)
