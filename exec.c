@@ -23,7 +23,7 @@ int	ft_child_a(t_pp pp, char **path_s, char **env)
 	cmd_path(&pp, pp.cmd_a[0], path_s);
 	//freeing
 	freeing(pp.cmd_b, path_s, NULL, NULL);
-	//executing the cmd via execve function, if the execve succeeds if will return nothing and terminate the process, else it will return -1.
+	//executing the cmd via execve function, if the execve succeeds it will return nothing and terminate the process, else it will return -1.
 	execve(pp.cmd_path, pp.cmd_a, env);
 	freeing(pp.cmd_a, NULL, NULL, pp.cmd_path);
 	return (-1);
