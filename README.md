@@ -112,7 +112,7 @@ $ export PATH=/usr/lib/lightdm/lightdm:/usr/local/sbin:/usr/local/bin:/usr/sbin:
 ## special cases in pipex:
 
 - When you unset the PATH you should keep creating the output file.
-- You should protect your functions when there is no env variable.
+- You should protect your functions when there are no env variables.
 - In place of the command, it can be the path of the command itself (like the example below). Thus, you should include this case while you are looking for commands path via access system call.
 ```
 $ ./pipex in_file /bin/cat /usr/bin/head out_file
