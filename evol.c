@@ -58,7 +58,7 @@ static	void	ft_evol(t_pp pp, char **path_s, char **env)
 		ft_b(pp, path_s, env);
 	//close all open files in the parent process since they are not useful anymore
 	ft_close_ends(pp.fd_in, pp.fd_out, pp.end[1], pp.end[0]);
-	//waitpid is responsible for helping the parent process to wait for its childs to terminate their execution
+	//waitpid is responsible for helping the parent process to wait for its children to terminate their execution
 	waitpid(pp.pid_b, NULL, 0);
 	waitpid(pp.pid_a, NULL, 0);
 	//deallocate memory
