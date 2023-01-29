@@ -91,7 +91,7 @@ $ echo $var
 $
 ```
 
-Testing your pipex project with a non-existing PATH env varaible:
+Testing your pipex project with a non-existing PATH env variable:
 
 ```
 $ echo $PATH
@@ -103,10 +103,19 @@ $ echo $PATH
 $
 ```
 
-to set the PATH env variable
+to set the PATH env variable you can export it or kill the current process:
 
 ```
 $ export PATH=/usr/lib/lightdm/lightdm:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
+```
+
+## special cases in pipex:
+
+- When you unset the PATH you should keep creating the output file.
+- You should protect your functions when there is no env variable.
+- In place of the command, it can be the path of the command itself (like the example below). Thus, you should include this case while you are looking for commands path via access system call.
+```
+$ ./pipex in_file /bin/cat /usr/bin/head out_file
 ```
 
 __3. Redirecting Input and Output__
