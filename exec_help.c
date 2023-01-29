@@ -80,8 +80,7 @@ void	cmd_path(t_pp *pp, char *cmd, char **path_s)
 	}
 	if (join == NULL)
 	{
-		//if the loop terminates and the value of join is NULL that means that the program/command does not exist or 
-		//we don't have permission to execute it
+		//if the loop terminates and the value of join is NULL that means that the program/command does not exist 
 		ft_free(pp, path_s, cmd);
 	}
 }
