@@ -1,7 +1,7 @@
 # pipex
 > This project is about implementing the same behaviors as pipes.
 
-To understands the project in details read the subject. (look for it between repository files).
+To understand the project in details read the subject. (look for it between repository files).
 
 ```
 $> ./pipex infile "ls -l" "wc -l" outfile
@@ -296,4 +296,4 @@ int main(void)
 }
 ```
 
-*Hope this is going to help you to finish the project with a good understanding of its general aspects!*
+*Hope these notes are going to help you finish the project with a good understanding of its general aspects!*
