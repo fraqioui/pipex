@@ -73,6 +73,42 @@ $ PATH=$PATH:/path/to/directory
 ```
 $ PATH=$PATH:.
 ```
+
+  ------ Removing Environment Variables -----
+  
+  if you can create a new environment variable, it makes sense that you can also
+remove an existing environment variable. You can do this with the unset command. When
+referencing the environment variable in the unset command, remember not to use the
+dollar sign:
+
+```
+$ echo $var
+hello
+$
+$
+$ unset var
+$ echo $var
+$
+```
+
+Testing your pipex project with a non-existing PATH env varaible:
+
+```
+$ echo $PATH
+/usr/lib/lightdm/lightdm:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
+$
+$
+$ unset PATH
+$ echo $PATH
+$
+```
+
+to set the PATH env variable
+
+```
+$ export PATH=/usr/lib/lightdm/lightdm:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
+```
+
 __3. Redirecting Input and Output__
 
 Sometimes, you want to save the output from a command instead of just having it displayed on the monitor. The bash shell provides a few different operators that allow you to redirect the output of a command to an alternative location (such as a file). Redirection can be used for input as well as output, redirecting a file to a command for input. This section describes what you need to do to use redirection in your shell scripts.
