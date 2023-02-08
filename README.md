@@ -127,7 +127,7 @@ Sometimes, you want to save the output from a command instead of just having it 
 The most basic type of redirection is sending output from a command to a file. The bash
 shell uses the greater-than symbol (>) for this: command > outputfile    
 
-- to overwrite: >>
+- to append: >>
 
 *Input redirection*
 
