@@ -10,10 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include"pipex.h"
-//before terminating any process or exiting due to an execution failure, 
-//the programmer is responsible closing every open file and freeing every allocated memory since nothing in the C standard guarantees
-//that the system will free or close.
-//So, before terminating any process, I should close open files and deallocate memory.
+
 static	void	ft_setting(char **av, char **env)
 {
 	t_pp	pp;
